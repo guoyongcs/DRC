@@ -1,7 +1,7 @@
 # Towards Lightweight Super-Resolution with Dual Regression Learning
 [Yong Guo](http://www.guoyongcs.com/), Jingdong Wang, Qi Chen, Jiezhang Cao, Zeshuai Deng, Yanwu Xu, Jian Chen, Mingkui Tan
 
-### [Paper](https://arxiv.org/pdf/2207.07929.pdf)
+[comment]: <> (### [Paper]&#40;https://arxiv.org/pdf/2207.07929.pdf&#41;)
 
 
 This repository contains the official Pytorch implementation and the pretrained models of [Towards Lightweight Super-Resolution with Dual Regression Learning](https://arxiv.org/pdf/2207.07929.pdf).
