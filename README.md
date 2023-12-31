@@ -1,4 +1,5 @@
-# Towards Lightweight Super-Resolution with Dual Regression Learning
+# Dual Regression Compression (DRC)
+
 [Yong Guo](http://www.guoyongcs.com/), Jingdong Wang, Qi Chen, Jiezhang Cao, Zeshuai Deng, Yanwu Xu, Jian Chen, Mingkui Tan
 
 [comment]: <> (### [Paper]&#40;https://arxiv.org/pdf/2207.07929.pdf&#41;)
