@@ -82,6 +82,75 @@ You can download the compressed **blind** SR models (remove 30\% parameters) obt
 | :-------- | :----: | :-------: | :------: | :-------: | :----: | :----------------------------------------------------------: |
 | DCLS-DRC | 14.2M |  57.1   | DIV2KRK |  29.01 | 0.798 | [Download]() |
 
+## Evaluating Pre-trained Models
+
+#### Testing of our DRN-S and Compressed DRN-S Models
+You can use the following command to test our DRN-S model for 4x SR. To test the compressed DRN-S model, you may need to set the path of the channel configuration `--config_path` in the following commands.
+
+```shell
+cd DRN/
+
+# Test DRN-S
+python main.py --data_dir datasets/ \
+--save ../experiments/drns_x4 \
+--data_test Set5 --scale 4 --template DRNS \ 
+--test_only --save_results \
+--pre_train ../pretrained_models/DRNS4x.pt
+
+# Test DRN-S30 (which removes about 30% parameters from DRN-S)
+python main.py --data_dir datasets/ \
+--save ../experiments/drns30_x4 \
+--data_test Set5 --scale 4 --template DRNS \
+--test_only --save_results \
+--pre_train ../pretrained_models/DRNS30_4x.pt \ 
+--config_path ../pretrained_models/DRNS30_4x_config.txt
+```
+
+#### Testing of the SwinIR-DR and SwinIR-light-DRC Models
+You can use the following command to test the SwinIR-DR and SwinIR-light-DRC models for 4x SR.
+**Note:** To test SwinIR-light-DR, you need to modify the option fileset to set `configs_path` to the path of the searched channel configuration for SwinIR-light model.
+
+```shell
+cd SwinIR/
+# Test SwinIR-DR
+python main_test_swinir.py --task classical_sr --scale 4 \
+--training_patch_size 64 --folder_gt datasets/Set5/HR \
+--folder_lq datasets/Set5/LR_bicubic/X4 \
+--model_path ../pretrained_models/SwinIR/SwinIR-DR_x4.pth
+
+# Test SwinIR-light-DR
+python main_test_swinir.py --task lightweight_sr --scale 4 \
+--folder_gt datasets/Set5/HR \
+--folder_lq datasets/Set5/LR_bicubic/X4 \
+--model_path ../pretrained_models/SwinIR/SwinIR_light_DRC.pth \
+--opt_path options/swinir/test_swinir_sr_lightweight_pruning.json 
+```
+
+#### Testing of the DAT-DR Model
+You can use the following command the test the DAT-DR Model.
+**Note:** You need to modify the option file to set the paths of dataset and pretrained DAT-DR model.
+```shell
+cd DAT/
+# Test DAT-DR
+python basicsr/test.py -opt options/Test/test_DAT_x4_drn.yml
+```
+
+
+#### Testing of the DCLS-DRC Model under the Blind Setting
+You can use the following command the test the DCLS-DRC Model. **Note:** You need to modify the option file to set the paths of dataset, pretrained DCLS-DRC model and the search channel configuration file.
+
+```shell
+cd DCLS/
+# Test DCLS-DRC
+python test.py \
+-opt options/setting2/test/test_setting2_x4_dcls_drc.yml \
+--save_dir experiments/test_dcls_drc_x4
+```
+
+
+---
+
+
 
 ## Training 
 First, please download the training and testing datasets, and place them in any folder, such as `datasets/`. 
@@ -252,80 +321,13 @@ python finetune.py \
 ```
 
 
-## Testing
-
-#### Testing of our DRN-S and Compressed DRN-S Models
-You can use the following command to test our DRN-S model for 4x SR. To test the compressed DRN-S model, you may need to set the path of the channel configuration `--config_path` in the following commands.
-
-```shell
-cd DRN/
-
-# Test DRN-S
-python main.py --data_dir datasets/ \
---save ../experiments/drns_x4 \
---data_test Set5 --scale 4 --template DRNS \ 
---test_only --save_results \
---pre_train ../pretrained_models/DRNS4x.pt
-
-# Test DRN-S30 (which removes about 30% parameters from DRN-S)
-python main.py --data_dir datasets/ \
---save ../experiments/drns30_x4 \
---data_test Set5 --scale 4 --template DRNS \
---test_only --save_results \
---pre_train ../pretrained_models/DRNS30_4x.pt \ 
---config_path ../pretrained_models/DRNS30_4x_config.txt
-```
-
-#### Testing of the SwinIR-DR and SwinIR-light-DRC Models
-You can use the following command to test the SwinIR-DR and SwinIR-light-DRC models for 4x SR.
-**Note:** To test SwinIR-light-DR, you need to modify the option fileset to set `configs_path` to the path of the searched channel configuration for SwinIR-light model.
-
-```shell
-cd SwinIR/
-# Test SwinIR-DR
-python main_test_swinir.py --task classical_sr --scale 4 \
---training_patch_size 64 --folder_gt datasets/Set5/HR \
---folder_lq datasets/Set5/LR_bicubic/X4 \
---model_path ../pretrained_models/SwinIR/SwinIR-DR_x4.pth
-
-# Test SwinIR-light-DR
-python main_test_swinir.py --task lightweight_sr --scale 4 \
---folder_gt datasets/Set5/HR \
---folder_lq datasets/Set5/LR_bicubic/X4 \
---model_path ../pretrained_models/SwinIR/SwinIR_light_DRC.pth \
---opt_path options/swinir/test_swinir_sr_lightweight_pruning.json 
-```
-
-#### Testing of the DAT-DR Model
-You can use the following command the test the DAT-DR Model. 
-**Note:** You need to modify the option file to set the paths of dataset and pretrained DAT-DR model.
-```shell
-cd DAT/
-# Test DAT-DR
-python basicsr/test.py -opt options/Test/test_DAT_x4_drn.yml
-```
-
-
-#### Testing of the DCLS-DRC Model under the Blind Setting
-You can use the following command the test the DCLS-DRC Model. **Note:** You need to modify the option file to set the paths of dataset, pretrained DCLS-DRC model and the search channel configuration file.
-
-```shell
-cd DCLS/
-# Test DCLS-DRC
-python test.py \
--opt options/setting2/test/test_setting2_x4_dcls_drc.yml \
---save_dir experiments/test_dcls_drc_x4
-```
-
-
----
 
 
 
 
 ## Results
 
-We achieved state-of-the-art performance. Detailed results can be found in the paper.
+We achieved competitive performance. Detailed results can be found in the paper.
 
 <details>
 <summary>Click to expand</summary>
