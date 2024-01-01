@@ -1,0 +1,95 @@
+# general settings
+name: test_DAT_dr_x4
+model_type: DATModel
+scale: 4
+num_gpu: 1
+manual_seed: 10
+
+datasets:
+  test_1:  # the 1st test dataset
+    task: SR
+    name: Set5
+    type: PairedImageDataset
+    dataroot_gt: /data_root/dataset/sr/benchmark/Set5/HR
+    dataroot_lq: /data_root/dataset/sr/benchmark/Set5/LR_bicubic/X4
+    filename_tmpl: '{}x4'
+    io_backend:
+      type: disk
+
+  test_2:  # the 2st test dataset
+    task: SR
+    name: Set14
+    type: PairedImageDataset
+    dataroot_gt: /data_root/dataset/sr/benchmark/Set14/HR
+    dataroot_lq: /data_root/dataset/sr/benchmark/Set14/LR_bicubic/X4
+    filename_tmpl: '{}x4'
+    io_backend:
+      type: disk
+
+  test_3:  # the 3st test dataset
+    task: SR
+    name: B100
+    type: PairedImageDataset
+    dataroot_gt: /data_root/dataset/sr/benchmark/B100/HR
+    dataroot_lq: /data_root/dataset/sr/benchmark/B100/LR_bicubic/X4
+    filename_tmpl: '{}x4'
+    io_backend:
+      type: disk
+
+  test_4:  # the 4st test dataset
+    task: SR
+    name: Urban100
+    type: PairedImageDataset
+    dataroot_gt: /data_root/dataset/sr/benchmark/Urban100/HR
+    dataroot_lq: /data_root/dataset/sr/benchmark/Urban100/LR_bicubic/X4
+    filename_tmpl: '{}x4'
+    io_backend:
+      type: disk
+
+  test_5:  # the 5st test dataset
+    task: SR
+    name: Manga109
+    type: PairedImageDataset
+    dataroot_gt: /data_root/dataset/sr/benchmark/Manga109/HR
+    dataroot_lq: /data_root/dataset/sr/benchmark/Manga109/LR_bicubic/X4
+    filename_tmpl: '{}x4'
+    io_backend:
+      type: disk
+
+
+# network structures
+network_g:
+  type: DAT
+  upscale: 4
+  in_chans: 3
+  img_size: 64
+  img_range: 1.
+  split_size: [8,32]
+  depth: [6,6,6,6,6,6]
+  embed_dim: 180
+  num_heads: [6,6,6,6,6,6]
+  expansion_factor: 4
+  resi_connection: '1conv'
+  dual: True
+
+# path
+path:
+  pretrain_network_g: /data_root/mywork/DRN/DRNv2_TPAMI_CodeHub/DAT/experiments/1211_train_DAT_drn_x4/models/net_g_4000.pth
+  param_key_g: params_ema
+  strict_load_g: True
+
+# validation settings
+val:
+  save_img: True
+  suffix: ~  # add suffix to saved images, if None, use exp name
+  use_chop: False  # True to save memory, if img too large
+
+  metrics:
+    psnr: # metric name, can be arbitrary
+      type: calculate_psnr
+      crop_border: 4
+      test_y_channel: True
+    ssim:
+      type: calculate_ssim
+      crop_border: 4
+      test_y_channel: True
