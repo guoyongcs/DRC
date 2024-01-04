@@ -8,7 +8,6 @@ from torch.optim import Adam
 from torch.optim import lr_scheduler
 
 from utils import pruned_utils
-# from utils.pruned_utils import get_logger, TensorboardLogger, timer, tensor2uint
 from utils.pruned_utils import get_logger, timer, tensor2uint
 
 from .search_controller import SearchController
