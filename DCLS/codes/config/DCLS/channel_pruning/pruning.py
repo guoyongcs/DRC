@@ -187,7 +187,6 @@ class BlockPrune(object):
             self.block.body1[2] = replace_layer(self.block.body1[2], thin_weight, thin_bias)
             
             # prune and replace out_features of body1_0 (conv2d)
-            
             thin_weight, thin_bias = get_thin_params(self.block.body1[0], select_channels, 0)
             self.block.body1[0] = replace_layer(self.block.body1[0], thin_weight, thin_bias)
             
@@ -221,7 +220,6 @@ class BlockPrune(object):
                 return None
             
             # compute selected channels 
-            # TODO, checking wether reshape the select channels for linear layer
             select_channels = get_select_channels(self.block.dec[-1].d)
             self.select_channels = select_channels
 

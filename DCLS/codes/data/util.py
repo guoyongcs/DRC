@@ -99,11 +99,6 @@ def augment(img, hflip=True, rot=True, mode=None):
         return [_augment(I) for I in img]
     else:
         return _augment(img)
-    # if mode == 'LQ' or mode == 'GT' or mode == 'SRker':
-    #     return _augment(img)
-    # # elif mode == 'LQGTker':
-    # elif mode == 'LQGT':
-    #     return [_augment(I) for I in img]
 
 
 def augment_flow(img_list, flow_list, hflip=True, rot=True):

@@ -161,7 +161,6 @@ class ChannelPruning():
         original_modules = model2list(self.segment_wise_trainer.original_modules)
         pruned_modules = model2list(self.segment_wise_trainer.pruned_modules)
 
-        # original_seq = nn.Sequential(*original_modules)
         pruned_seq = nn.Sequential(*pruned_modules)
         
         self.logger.info(pruned_seq)
@@ -176,7 +175,6 @@ class ChannelPruning():
         self.segment_wise_trainer.val(0)
         
         block_count = len(pruned_modules)
-        # self.checkpoint.save_models(self.pruned_model, block_count)
         
         self.pruning()
 

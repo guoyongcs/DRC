@@ -15,7 +15,6 @@ fused = load(
     ],
 )
 
-#fused = _import_module_from_library('fused', '/tmp/torch_extensions/fused', True)
 
 
 class FusedLeakyReLUFunctionBackward(Function):

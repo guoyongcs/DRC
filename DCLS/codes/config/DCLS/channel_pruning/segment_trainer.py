@@ -46,11 +46,8 @@ class SegmentWiseTrainer(object):
         block_count = 0
         for (ori_name, ori_module), (_, pruned_module) in \
             zip(self.original_model.named_modules(), self.pruned_model.named_modules()):
-            # TODO, check the order of Estimator module should follow the 3 ResidualBlock_noBN
             if isinstance(ori_module, (DPCAB, ResidualBlock_noBN, nn.ModuleList)):
-                
                 self.logger.info("enter block: {}".format(type(ori_module)))
-                
                 if isinstance(ori_module, nn.ModuleList):
                     # replace the ModuleList with the prarent module
                     for ori_m, pruned_m in zip(self.original_model.modules(), self.pruned_model.modules()):

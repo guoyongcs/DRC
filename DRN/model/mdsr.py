@@ -61,9 +61,6 @@ class MDSR(nn.Module):
         x = self.tail(x)
         x = self.add_mean(x)
 
-        # if self.opt.dual:
-        #     x_down = self.dual_model[self.scale_idx](x)
-        #     return x, x_down
         return x
 
     def set_scale(self, scale_idx):

@@ -9,8 +9,6 @@ import torch.nn as nn
 from .common_module import MaskLinear, MaskOutLinear
 from models.network_swinir_pruned import WindowAttention
 from utils.pruned_utils import write_log, AverageMeter
-# from .thinet_prune import ThinetFilterPrune
-# from .lasso_prune import LassoFilterPrune
 
 
 class LayerChannelSelection(object):
@@ -291,9 +289,8 @@ class LayerChannelSelection(object):
             n_heads = pruned_module.num_heads
             cum_grad = cum_grad.reshape((-1, n_heads, n_dim // n_heads))
 
-            # calculate L1 norm of gradient, TODO checking
+            # calculate L1 norm of gradient
             # (1 - pruned_dim) the dimention of the preserved features
-            # grad_fnorm = cum_grad.mul(cum_grad).sum((2, 3)).sqrt().sum(0)
             grad_fnorm = cum_grad.abs().sum((0, 1))
         else:
             grad_fnorm = cum_grad.abs().sum(0)
@@ -372,15 +369,6 @@ class LayerChannelSelection(object):
                 layer.pruned_weight.grad.data.mul_(
                     layer.d.unsqueeze(0).expand_as(layer.pruned_weight))
                 
-                # ### qkv updating
-                # if isinstance(pruned_module, WindowAttention):
-                #     qkv = pruned_module.qkv
-                #     qkv.pruned_weight.grad.data.mul_(
-                #         qkv.d.unsqueeze(1).expand_as(qkv.pruned_weight))
-                #     if qkv.bias is not None:
-                #         qkv.pruned_bias.grad.data.mul_(
-                #             qkv.d.expand_as(qkv.pruned_bias))
-                
                 optimizer.step()
 
             # update record info
@@ -442,10 +430,6 @@ class LayerChannelSelection(object):
         if self.args.opt['pruning']['prune_type'].lower() == 'dcp':
             # find the channel with the maximum gradient norm
             self.dcp_selection(pruned_module, layer, block_count, layer_name)
-        # elif self.args.opt['pruning']['prune_type'].lower() == 'cp':
-        #     self.lasso_selection(layer, block_count, layer_name)
-        # elif self.args.opt['pruning']['prune_type'].lower() == 'thinet':
-        #     self.thinet_selection(layer, block_count, layer_name)
         else:
             assert False, "unsupport prune type: {}".format(self.args.opt['pruning']['prune_type'])
         

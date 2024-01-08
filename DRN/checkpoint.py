@@ -128,5 +128,4 @@ class Checkpoint():
         v = save_list[0]
         normalized = v[0].data.mul(255 / self.opt.rgb_range)
         ndarr = normalized.byte().permute(1, 2, 0).cpu().numpy()
-        # misc.imsave('{}.png'.format(filename), ndarr)
         imageio.imwrite('{}.png'.format(filename), ndarr)

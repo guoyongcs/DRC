@@ -7,13 +7,11 @@ import copy
 import torch
 import torch.optim as optim
 import torch.optim.lr_scheduler as lrs
-# import torch.backends.cudnn as cudnn
 
 def set_seed(seed):
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
-    # cudnn.benchmark = True
     if torch.cuda.device_count() == 1:
         torch.cuda.manual_seed(seed)
     else:
@@ -147,15 +145,12 @@ def calc_ssim(sr, hr, scale, rgb_range, benchmark=False):
     hr = np.dot(hr, [65.481, 128.553, 24.966]) / 255.0 + 16.0
 
     assert sr.shape == hr.shape, 'Input images must have the same dimensions.'
-    # assert sr.ndim == 3 and sr.shape[2] == 1, 'Wrong input image dimensions.'
     assert sr.ndim == 2, 'Wrong input image dimensions.'
         
     return ssim(sr, hr)
 
 def make_optimizer(opt, my_model):
     trainable = filter(lambda x: x.requires_grad, my_model.parameters())
-    # for name, _ in my_model.named_parameters():
-    #     print("model parameter name: ", name)
 
     if opt.optimizer == 'SGD':
         optimizer_function = optim.SGD

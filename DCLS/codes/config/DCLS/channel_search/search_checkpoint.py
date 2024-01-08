@@ -1,7 +1,6 @@
 import os
 import os.path as osp
 import torch
-# import torch.nn as nn
 from torch.nn.parallel import DataParallel, DistributedDataParallel
 import torch.nn.functional as F
 from collections import OrderedDict

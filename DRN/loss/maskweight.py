@@ -111,7 +111,6 @@ class MaskWeightLoss(nn.Module):
         # caculate the gradient loss 
         if self.opt.divide:
             # caculate the loss separately
-            # print('maskweight divide')
             grad_loss_x = self.criterion(mask * inputs_grad_x + self.opt.ROBUST, mask * targets_grad_x.detach() + self.opt.ROBUST)
             grad_loss_y = self.criterion(mask * inputs_grad_y + self.opt.ROBUST, mask * targets_grad_y.detach() + self.opt.ROBUST)
             gradient_loss = grad_loss_x + grad_loss_y
@@ -121,7 +120,6 @@ class MaskWeightLoss(nn.Module):
         
         # caculate the total loss
         loss = content_loss + self.opt.alpha * gradient_loss
-        # print('loss', loss.item())
         return loss
 
 
@@ -144,7 +142,6 @@ class CMaskWeightLoss(nn.Module):
         self._init_weights()
 
         self.criterion = nn.L1Loss(reduction=self.opt.l1_reduction)
-        # self.vis = visdom.Visdom(port=8080)
 
     def _init_weights(self):
         weights_dx = torch.FloatTensor([1,0,-1])
@@ -202,7 +199,6 @@ class CMaskWeightLoss(nn.Module):
         return self.softer_softmax(norm)
 
     def forward(self, inputs, targets):
-        # print('cmaskweight loss')
         # inputs gradient
         inputs_grad_x = self.dx(inputs)
         inputs_grad_y = self.dy(inputs)
@@ -228,9 +224,6 @@ class CMaskWeightLoss(nn.Module):
         mask = mask.expand_as(inputs)
 
         # caculate the content loss
-        # if self.opt.content_mask:
-        #     content_loss = self.criterion(mask * inputs + self.opt.ROBUST, mask * targets.detach() + self.opt.ROBUST)
-        # else:
         content_loss = self.criterion(inputs + self.opt.ROBUST, targets.detach() + self.opt.ROBUST)
         
         # caculate weight
@@ -239,7 +232,6 @@ class CMaskWeightLoss(nn.Module):
         # caculate the gradient loss 
         if self.opt.divide:
             # caculate the loss separately
-            # print('cmaskweight divide')
             grad_loss_x = self.criterion(complement_mask * inputs_grad_x + self.opt.ROBUST, complement_mask * targets_grad_x.detach() + self.opt.ROBUST)
             grad_loss_y = self.criterion(complement_mask * inputs_grad_y + self.opt.ROBUST, complement_mask * targets_grad_y.detach() + self.opt.ROBUST)
             gradient_loss = grad_loss_x + grad_loss_y

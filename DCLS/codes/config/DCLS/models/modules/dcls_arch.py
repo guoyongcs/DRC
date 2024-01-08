@@ -106,8 +106,7 @@ class Estimator(nn.Module):
         self.head = nn.Sequential(
             nn.Conv2d(in_nc, nf, 7, 1, 3)
         )
-        # for debugs, TODO 
-        # num_blocks = 1
+
         self.body = nn.Sequential(
             make_layer(basic_block, num_blocks)
         )
@@ -169,10 +168,6 @@ class Estimator(nn.Module):
 
         K = self.calc_curr_k(kernels, batch).mean(dim=1, keepdim=True)
 
-        # for anisox2
-        # K = F.softmax(K.flatten(start_dim=1), dim=1)
-        # K = K.view(batch, 1, self.ksize, self.ksize)
-
         K = K / torch.sum(K, dim=(2, 3), keepdim=True)
 
         return K
@@ -204,7 +199,6 @@ class Restorer(nn.Module):
         self.body = nn.Sequential(*body)
 
         self.fusion = nn.Conv2d(nf+nf2, nf, 3, 1, 1)
-        # self.fusion = CCALayer(nf, nf, reduction)
 
         if scale == 4:  # x4
             self.upscale = nn.Sequential(
@@ -224,10 +218,8 @@ class Restorer(nn.Module):
                 nn.Conv2d(nf, out_nc, 3, 1, 1),
             )
 
-        # self.relu = nn.LeakyReLU(0.1, inplace=True)
 
     def forward(self, input, kernel):
-        # B, C, H, W = input.size()  # I_LR batch
 
         f = self.conv_first(input)
         feature = self.feature_block(f)

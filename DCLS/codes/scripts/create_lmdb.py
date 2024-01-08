@@ -11,13 +11,11 @@ try:
     from utils import ProgressBar
 except ImportError:
     pass
-# img_folder = "/datac/g00837284/dataset/sr/setting1/Urban100/LRblur/x4/*"
+
 # x4HRblur x4LRblur
 # configurations
-# img_folder = '/data/DIV2K/DIV2K_train/LR/x4/*'  # glob matching pattern
-img_folder = "/datac/g00837284/dataset/sr/setting1/Set5/LRblur/x4/*"
-# lmdb_save_path = '/data/DIV2K/DIV2K_train_LR_sub.lmdb'
-lmdb_save_path = "/datac/g00837284/dataset/sr/setting1/Set5/x4LRblur.lmdb"
+img_folder = '/data/DIV2K/DIV2K_train/LR/x4/*'  # glob matching pattern
+lmdb_save_path = '/data/DIV2K/DIV2K_train_LR_sub.lmdb'
 meta_info = {"name": "DF2K"}
 
 mode = (

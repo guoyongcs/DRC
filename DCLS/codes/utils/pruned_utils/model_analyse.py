@@ -105,9 +105,6 @@ class ModelAnalyse(object):
 
     def _madds_linear_hook(self, layer, x, out):
         # compute number of multiply-add
-        # layer_madds = layer.weight.size(0) * layer.weight.size(1)
-        # if layer.bias is not None:
-        #     layer_madds += layer.weight.size(0)
         input = x[0]
         batch_size = input.shape[0]
         overall_flops = int(batch_size * input.shape[1] * out.shape[1])

@@ -96,8 +96,6 @@ class MaskedGradientGrey(nn.Module):
         grad_loss_y = self.criterion(masked_inputs_y, masked_targets_y.detach())
         grad_loss = grad_loss_x + grad_loss_y
 
-        # grad_loss = self.criterion(masked_inputs_grad, masked_targets_grad.detach())
-
         # calculate mse loss
         mse_loss = self.criterion(mse_inputs, mse_target.detach())
 

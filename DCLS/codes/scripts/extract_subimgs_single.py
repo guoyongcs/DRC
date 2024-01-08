@@ -83,9 +83,6 @@ def worker(path, save_folder, crop_sz, step, thres_sz, compression_level):
             else:
                 crop_img = img[x : x + crop_sz, y : y + crop_sz, :]
             crop_img = np.ascontiguousarray(crop_img)
-            # var = np.var(crop_img / 255)
-            # if var > 0.008:
-            #     print(img_name, index_str, var)
             cv2.imwrite(
                 os.path.join(
                     save_folder, img_name.replace(".png", "_s{:03d}.png".format(index))

@@ -19,7 +19,6 @@ class Trainer():
         self.loader_test = loader.loader_test
         self.model = my_model
         self.loss = my_loss
-        # self.loss_hook = self.loss.register_backward_hook(backward_hook)
         self.optimizer = utility.make_optimizer(opt, self.model)
         self.scheduler = utility.make_scheduler(opt, self.optimizer)
         if self.opt.dual:
@@ -102,7 +101,6 @@ class Trainer():
                 for i in range(1, len(self.scale)):
                     loss_dual += self.loss(sr2lr[i - len(self.scale)], lr[i - len(self.scale)])
 
-                # print('loss_primary', loss_primary.item(), 'loss_dual', loss_dual.item())
                 # compute total loss
                 loss = loss_primary + self.opt.dual_weight * loss_dual
             else:
@@ -148,7 +146,6 @@ class Trainer():
         else:
             epoch = self.scheduler.last_epoch
         self.ckp.write_log('\nEvaluation:')
-        # self.ckp.add_log(torch.zeros(1, len(self.scale)))
         self.ckp.add_log(torch.zeros(1, 1))
         self.model.eval()
 
@@ -158,7 +155,6 @@ class Trainer():
             for si, s in enumerate([scale]):
                 eval_psnr = 0
                 eval_ssim = 0
-                # self.loader_test.dataset.set_scale(si)
                 tqdm_test = tqdm(self.loader_test, ncols=80)
                 for _, (lr, hr, filename) in enumerate(tqdm_test):
                     filename = filename[0]
@@ -193,7 +189,6 @@ class Trainer():
 
                     # save test results
                     if self.opt.save_results:
-                        # self.ckp.save_results_nopostfix(filename, save_list, s)
                         self.ckp.save_results(filename, save_list, s)
 
                     # save intermediate images during training 

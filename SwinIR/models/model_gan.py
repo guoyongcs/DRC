@@ -278,8 +278,6 @@ class ModelGAN(ModelBase):
                 self.log_dict['F_loss'] = F_loss.item()
             self.log_dict['D_loss'] = D_loss.item()
 
-        #self.log_dict['l_d_real'] = l_d_real.item()
-        #self.log_dict['l_d_fake'] = l_d_fake.item()
         self.log_dict['D_real'] = torch.mean(pred_d_real.detach())
         self.log_dict['D_fake'] = torch.mean(pred_d_fake.detach())
 

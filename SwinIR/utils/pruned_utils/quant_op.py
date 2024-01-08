@@ -145,8 +145,6 @@ def get_best_activation_intlength(hist, hist_edges, target_bin=128):
             if norm != 0:
                 q[start:stop] = float(quantized_bins[j]) / float(norm)
         q[p == 0] = 0
-        # p = _smooth_distribution(p) # with some bugs, need to fix
-        # q = _smooth_distribution(q)
         p[p == 0] = 0.0001
         q[q == 0] = 0.0001
         

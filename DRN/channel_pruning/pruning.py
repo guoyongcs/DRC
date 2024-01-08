@@ -251,8 +251,6 @@ class SeqPrune(object):
             temp_seq.extend(self.block_prune[self.block_num].block)
         else:
             temp_seq.extend(self.sequential[self.block_num:])
-        # for i in range(self.block_num, self.sequential_length):
-        #     temp_seq.append(self.sequential[i])
             
         self.sequential = nn.Sequential(*temp_seq)
 

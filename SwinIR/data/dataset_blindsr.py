@@ -26,10 +26,6 @@ class DatasetBlindSR(data.Dataset):
         self.paths_H = util.get_image_paths(opt['dataroot_H'])
         print(len(self.paths_H))
 
-#        for n, v in enumerate(self.paths_H):
-#            if 'face' in v:
-#                del self.paths_H[n]
-#        time.sleep(1)
         assert self.paths_H, 'Error: H path is empty.'
 
     def __getitem__(self, index):

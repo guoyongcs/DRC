@@ -68,10 +68,9 @@ class DatasetFDnCNN(data.Dataset):
             # ---------------------------------
             # get noise level
             # ---------------------------------
-            # noise_level = torch.FloatTensor([np.random.randint(self.sigma_min, self.sigma_max)])/255.0
             noise_level = torch.FloatTensor([np.random.uniform(self.sigma_min, self.sigma_max)])/255.0
 
-            noise_level_map = torch.ones((1, img_L.size(1), img_L.size(2))).mul_(noise_level).float()  # torch.full((1, img_L.size(1), img_L.size(2)), noise_level)
+            noise_level_map = torch.ones((1, img_L.size(1), img_L.size(2))).mul_(noise_level).float() 
 
             # ---------------------------------
             # add noise

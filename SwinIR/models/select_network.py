@@ -269,7 +269,6 @@ def define_G(opt):
     # ----------------------------------------
     # others
     # ----------------------------------------
-    # TODO
 
     else:
         raise NotImplementedError('netG [{:s}] is not found.'.format(net_type))

@@ -23,12 +23,6 @@ def initialize_weights(net_l, scale=1):
                 init.constant_(m.weight, 1)
                 init.constant_(m.bias.data, 0.0)
 
-# def weights_init_G(m):
-#     """ initialize weights of the generator """
-#     if m.__class__.__name__.find('Conv') != -1:
-#         nn.init.xavier_normal_(m.weight, 0.1)
-#         if hasattr(m.bias, 'data'):
-#             m.bias.data.fill_(0)
 
 def make_layer(block, n_layers, inner_nfs=None):
     layers = []

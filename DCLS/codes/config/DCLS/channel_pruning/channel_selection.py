@@ -11,8 +11,6 @@ from models.modules.dcls_arch import DPCAB, Estimator
 from models.modules.module_util import ResidualBlock_noBN
 from models.modules.loss import CorrectionLoss
 from utils.pruned_utils import write_log, AverageMeter
-# from .thinet_prune import ThinetFilterPrune
-# from .lasso_prune import LassoFilterPrune
 
 
 class LayerChannelSelection(object):
@@ -205,7 +203,6 @@ class LayerChannelSelection(object):
         
         lr, hr = lr.cuda(), hr.cuda()
         lr_blured_t, lr_t = lr_blured_t.cuda(), lr_t.cuda()
-        # do not need to use ker_map and kernels for computing loss
 
         return lr, hr, ker_map, kernels, lr_blured_t, lr_t
 
@@ -387,7 +384,6 @@ class LayerChannelSelection(object):
                 layer.bias.requires_grad = False
 
     def write_log(self, layer, block_count, layer_name):
-        # self.write_tensorboard_log(block_count, layer_name)
         self.write_log2file(layer, block_count, layer_name)
 
     def write_tensorboard_log(self, block_count, layer_name):
@@ -436,17 +432,9 @@ class LayerChannelSelection(object):
         if self.args.opt['pruning']['prune_type'].lower() == 'dcp':
             # find the channel with the maximum gradient norm
             self.dcp_selection(pruned_module, layer, block_count, layer_name)
-        # elif self.args.opt['pruning']['prune_type'].lower() == 'cp':
-        #     self.lasso_selection(layer, block_count, layer_name)
-        # elif self.args.opt['pruning']['prune_type'].lower() == 'thinet':
-        #     self.thinet_selection(layer, block_count, layer_name)
         else:
             assert False, "unsupport prune type: {}".format(self.args.opt['pruning']['prune_type'])
         
-        # self.tensorboard_logger.scalar_summary(
-        #     tag="Channel_num",
-        #     value=layer.d.eq(1).sum(),
-        #     step=block_count)
         log_str = "|===>Select channel from block-{:d}_{}: time_total:{} time_avg: {}".format(
             block_count, layer_name,
             str(datetime.timedelta(seconds=self.record_time.sum)),

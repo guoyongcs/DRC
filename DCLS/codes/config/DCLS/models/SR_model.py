@@ -146,7 +146,6 @@ class SRModel(BaseModel):
         self.netG.eval()
 
         def _transform(v, op):
-            # if self.precision != 'single': v = v.float()
             v2np = v.data.cpu().numpy()
             if op == "v":
                 tfnp = v2np[:, :, :, ::-1].copy()
@@ -156,7 +155,6 @@ class SRModel(BaseModel):
                 tfnp = v2np.transpose((0, 1, 3, 2)).copy()
 
             ret = torch.Tensor(tfnp).to(self.device)
-            # if self.precision == 'half': ret = ret.half()
 
             return ret
 

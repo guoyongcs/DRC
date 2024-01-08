@@ -342,14 +342,11 @@ class StyledConv(nn.Module):
         )
 
         self.noise = NoiseInjection()
-        #self.bias = nn.Parameter(torch.zeros(1, out_channel, 1, 1))
-        #self.activate = ScaledLeakyReLU(0.2)
         self.activate = FusedLeakyReLU(out_channel*sss)
 
     def forward(self, input, style, noise=None):
         out = self.conv(input, style)
         out = self.noise(out, noise=noise)
-        # out = out + self.bias
         out = self.activate(out)
 
         return out
@@ -537,11 +534,9 @@ class Generator(nn.Module):
         for conv1, conv2, to_rgb in zip(
             self.convs[::2], self.convs[1::2], self.to_rgbs
         ):
-            #print(out.shape, noise[(noise_i)//2].shape, noise[(noise_i + 1)//2].shape)
             out = conv1(out, latent[:, i], noise=noise[(noise_i + 1)//2]) ### 1 for 2
             out = conv2(out, latent[:, i + 1], noise=noise[(noise_i + 2)//2]) ### 1 for 2
             skip = to_rgb(out, latent[:, i + 2], skip)
-            #outs.append(skip.clone())
 
             i += 2
             noise_i += 2
@@ -660,7 +655,6 @@ class FullGenerator(nn.Module):
         self.names = ['ecd%d'%i for i in range(self.log_size-1)]
         for i in range(self.log_size, 2, -1):
             out_channel = channels[2 ** (i - 1)]
-            #conv = [ResBlock(in_channel, out_channel, blur_kernel)]
             conv = [ConvLayer(in_channel, out_channel, 3, downsample=True)] 
             setattr(self, self.names[self.log_size-i+1], nn.Sequential(*conv))
             in_channel = out_channel
@@ -679,9 +673,7 @@ class FullGenerator(nn.Module):
             ecd = getattr(self, self.names[i])
             inputs = ecd(inputs)
             noise.append(inputs)
-            #print(inputs.shape)
         inputs = inputs.view(inputs.shape[0], -1)
         outs = self.final_linear(inputs)
-        #print(outs.shape)
         outs = self.generator([outs], return_latents, inject_index, truncation, truncation_latent, input_is_latent, noise=noise[::-1])
         return outs

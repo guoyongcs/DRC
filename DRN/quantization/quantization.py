@@ -4,7 +4,6 @@ import os.path as osp
 import copy
 import math
 from decimal import Decimal
-# from easydict import EasyDict
 from collections import OrderedDict
 import utility
 from utils import get_logger, TensorboardLogger, concat_gpu_datalist
@@ -92,12 +91,7 @@ class Quantization():
         # step 1: get the range of data_in
         quant_hist['step'] = 1
         self.logger.info('-----step 1-----')
-        # forward_round = math.ceil(
-        #     len(self.loader_train.dataset.images_hr) / self.args.batch_size)
-        # loader_train_iter = iter(self.loader_train)
         with torch.no_grad():
-            # for batch_idx in range(forward_round):
-            # lr, _, _ = loader_train_iter.next()
             for batch_idx, (lr, _, _ ) in enumerate(self.loader_train):
                 lr = lr[0].cuda() if not self.args.cpu else lr[0]
                 _ = self.temp_model(lr)

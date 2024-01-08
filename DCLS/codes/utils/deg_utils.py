@@ -228,7 +228,6 @@ class BatchBlur(object):
             self.pad =(l // 2, l // 2, l // 2, l // 2)
         else:
             self.pad = (l // 2, l // 2 - 1, l // 2, l // 2 - 1)
-        # self.pad = nn.ZeroPad2d(l // 2)
 
     def __call__(self, input, kernel):
         B, C, H, W = input.size()

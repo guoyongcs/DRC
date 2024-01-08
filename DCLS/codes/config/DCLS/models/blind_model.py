@@ -177,8 +177,6 @@ class B_Model(BaseModel):
 
         self.optimizer_G.zero_grad()
         total_loss.backward()
-        # torch.nn.utils.clip_grad_norm_(self.netG.parameters(), .1)
-        # torch.nn.utils.clip_grad_value_(self.netG.parameters(), .1)
         self.optimizer_G.step()
 
 
@@ -196,7 +194,6 @@ class B_Model(BaseModel):
         self.netG.eval()
 
         def _transform(v, op):
-            # if self.precision != 'single': v = v.float()
             v2np = v.data.cpu().numpy()
             if op == "v":
                 tfnp = v2np[:, :, :, ::-1].copy()
@@ -206,7 +203,6 @@ class B_Model(BaseModel):
                 tfnp = v2np.transpose((0, 1, 3, 2)).copy()
 
             ret = torch.Tensor(tfnp).to(self.device)
-            # if self.precision == 'half': ret = ret.half()
 
             return ret
 
@@ -251,13 +247,6 @@ class B_Model(BaseModel):
             )
         else:
             net_struc_str = "{}".format(self.netG.__class__.__name__)
-        # if self.rank <= 0:
-        #     logger.info(
-        #         "Network G structure: {}, with parameters: {:,d}".format(
-        #             net_struc_str, n
-        #         )
-        #     )
-        #     logger.info(s)
 
     def load(self):
         load_path_G = self.opt["path"]["pretrain_model_G"]

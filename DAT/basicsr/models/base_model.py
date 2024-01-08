@@ -237,7 +237,6 @@ class BaseModel():
                 retry -= 1
         if retry == 0:
             logger.warning(f'Still cannot save {save_path}. Just ignore it.')
-            # raise IOError(f'Cannot save {save_path}.')
 
     def _print_different_keys_loading(self, crt_net, load_net, strict=True):
         """Print keys with different name or different size when loading models.

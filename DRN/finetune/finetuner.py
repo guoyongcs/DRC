@@ -27,7 +27,6 @@ class Finetuner():
 
         self.logger = get_logger(args.save, "finetune", log_file='finetune.txt')
         self.tensorboard_logger = None
-        # self.tensorboard_logger = TensorboardLogger(osp.join(args.save, 'ft_tb'))
         self.logger.info("|===>Result will be saved at {}".format(args.save))
         
         self.start_epoch = 1
@@ -93,18 +92,6 @@ class Finetuner():
             timer_model.hold()
             
             if (batch + 1) % self.args.print_every == 0:
-                # self.tensorboard_logger.scalar_summary(
-                #     tag="KD_loss",
-                #     value=kd_loss,
-                #     step=self.logger_counter)
-                # self.tensorboard_logger.scalar_summary(
-                #     tag="Reconstruction_loss",
-                #     value=rec_loss,
-                #     step=self.logger_counter)
-                # self.tensorboard_logger.scalar_summary(
-                #     tag="Total_loss",
-                #     value=total_loss,
-                #     step=self.logger_counter)
                 self.logger_counter += 1
                 log = 'Epoch: {:0>4d} lr: {:.2e} '.format(epoch, Decimal(lr))
                 log += "[{:0>5d}/{:d}]  ".format(
@@ -160,9 +147,6 @@ class Finetuner():
             pruned_log += '(Best: {:.3f} @epoch {})'.format(
                             self.pruned_best_psnr, self.pruned_best_epoch)
             self.logger.info(pruned_log)
-        
-        # self.tensorboard_logger.scalar_summary(
-        #         "pruned_model_psnr", pruned_psnr, epoch)
         
         self.checkpoint.save(self, epoch, self.args.save)
 

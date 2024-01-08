@@ -64,7 +64,6 @@ class BaseModel:
             self._set_lr(warm_up_lr_l)
 
     def get_current_learning_rate(self):
-        # return self.schedulers[0].get_lr()[0]
         return self.optimizers[0].param_groups[0]["lr"]
 
     def get_network_description(self, network):
@@ -97,10 +96,6 @@ class BaseModel:
         load_net = torch.load(load_path)
         load_net_clean = OrderedDict()  # remove unnecessary 'module.'
         for k, v in load_net.items():
-            # if k.startswith("module."):
-            #     load_net_clean[k[7:]] = v
-            # else:
-            #     load_net_clean[k] = v
             if k.startswith("module."):
                 new_k = k[7:]
             else:

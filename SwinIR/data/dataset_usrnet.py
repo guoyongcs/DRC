@@ -10,7 +10,6 @@ import os
 
 from scipy import ndimage
 from scipy.io import loadmat
-# import hdf5storage
 
 
 class DatasetUSRNet(data.Dataset):
@@ -28,7 +27,6 @@ class DatasetUSRNet(data.Dataset):
         self.sigma_max = self.opt['sigma_max'] if self.opt['sigma_max'] is not None else 25
         self.scales = opt['scales'] if opt['scales'] is not None else [1,2,3,4]
         self.sf_validation = opt['sf_validation'] if opt['sf_validation'] is not None else 3
-        #self.kernels = hdf5storage.loadmat(os.path.join('kernels', 'kernels_12.mat'))['kernels']
         self.kernels = loadmat(os.path.join('kernels', 'kernels_12.mat'))['kernels']  # for validation
 
         # -------------------

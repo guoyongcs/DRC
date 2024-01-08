@@ -38,8 +38,6 @@ def parse(opt_path, is_train=True, exp_root=None):
             dataset["dataroot_GT"] = osp.expanduser(dataset["dataroot_GT"])
             if dataset["dataroot_GT"].endswith("lmdb"):
                 is_lmdb = True
-        # if dataset.get('dataroot_GT_bg', None) is not None:
-        #     dataset['dataroot_GT_bg'] = osp.expanduser(dataset['dataroot_GT_bg'])
         if dataset.get("dataroot_LQ", None) is not None:
             dataset["dataroot_LQ"] = osp.expanduser(dataset["dataroot_LQ"])
             if dataset["dataroot_LQ"].endswith("lmdb"):

@@ -43,7 +43,6 @@ def main():
     util.set_random_seed(opt['train']['manual_seed'])
 
     torch.backends.cudnn.benchmark = True
-    # torch.backends.cudnn.deterministic = True
 
     #### init logger
     logger_name = 'pruning'

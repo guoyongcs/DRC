@@ -21,8 +21,6 @@ class DRNTRes(nn.Module):
 
         act = nn.LeakyReLU(0.2, True) # nn.ReLU(True)
 
-        # self.upsample = nn.Upsample(scale_factor=max(opt.scale),
-        #                             mode='bicubic', align_corners=False)
         self.upsample = nn.Upsample(scale_factor=max(opt.scale),
                                     mode='bilinear', align_corners=False)
 

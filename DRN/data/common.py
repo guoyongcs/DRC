@@ -9,7 +9,6 @@ from torchvision import transforms
 def get_patch(*args, patch_size=96, scale=[2], multi_scale=False):
     th, tw = args[-1].shape[:2] # the least size input lr images size
 
-    # p = scale if multi_scale else 1 # if not multi_scale, p is equals to 1
     tp = patch_size  # patch size of target hr image, accoding to the order of lr images
     ip = [patch_size // s for s in scale] #  patch size of least size input lr image
 

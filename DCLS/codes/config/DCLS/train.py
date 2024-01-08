@@ -55,7 +55,6 @@ def model_test(model, val_loader, opt, logger):
         # Save images for reference
         img_name = val_data["LQ_path"][0]
         img_dir = os.path.join(opt["path"]["val_images"], img_name)
-        # img_dir = os.path.join(opt['path']['val_images'], str(current_step), '_', str(step))
 
         sr_img = util.tensor2img(visuals["SR"].squeeze())  # uint8
         gt_img = util.tensor2img(visuals["GT"].squeeze())  # uint8
@@ -84,7 +83,6 @@ def model_test(model, val_loader, opt, logger):
         )
         idx += 1
         logger.info("Test image: {:d}".format(idx))
-        # print("Test image: {:d}".format(idx))
 
     avg_psnr = avg_psnr / idx
     logger.info(
@@ -106,12 +104,6 @@ def main():
 
     # convert to NoneDict, which returns None for missing keys
     opt = option.dict_to_nonedict(opt)
-
-    # choose small opt for SFTMD test, fill path of pre-trained model_F
-    #### set random seed
-    # seed = opt["train"]["manual_seed"]
-    # if seed is None:
-    #     seed = random.randint(1, 10000)
 
     # load PCA matrix of enough kernel
     print("load PCA matrix")
@@ -137,7 +129,6 @@ def main():
         util.set_random_seed(opt['train']['manual_seed'])
 
     torch.backends.cudnn.benchmark = True
-    # torch.backends.cudnn.deterministic = True
 
     ###### Predictor&Corrector train ######
 
@@ -149,13 +140,11 @@ def main():
             opt["path"]["resume_state"],
             map_location=lambda storage, loc: storage.cuda(device_id),
         )
-        # option.check_resume(opt, resume_state["iter"])  # check resume options
     else:
         resume_state = None
 
     #### mkdir and loggers
     if rank <= 0:  # normal training (rank -1) OR distributed training (rank 0-7)
-        # if resume_state is None:
         # Predictor path
         util.mkdir_and_rename(
             opt["path"]["experiments_root"]
@@ -169,8 +158,6 @@ def main():
                 and "resume" not in key
             )
         )
-            # os.system("rm ./log")
-            # os.symlink(os.path.join(opt["path"]["experiments_root"], ".."), "./log")
 
         # config loggers. Before it, the log will not work
         util.setup_logger(
@@ -190,12 +177,6 @@ def main():
             tofile=True,
         )
         logger = logging.getLogger("base")
-        # log_format = '%(asctime)s %(message)s'
-        # console_handler = logging.StreamHandler(sys.stdout)
-        # console_handler.setLevel(logging.DEBUG)
-        # console_handler.setFormatter(
-        #     logging.Formatter(fmt=log_format, datefmt='%Y-%m-%d %H:%M:%S'))
-        # logger.addHandler(console_handler)
         logger.info(option.dict2str(opt))
         # tensorboard logger
         if opt["use_tb_logger"] and "debug" not in opt["name"]:
@@ -217,7 +198,6 @@ def main():
         logger = logging.getLogger("base")
 
     torch.backends.cudnn.benchmark = True
-    # torch.backends.cudnn.deterministic = True
 
     # ----------------------------------------
     train_dataroot = args.train_dataroot
@@ -282,10 +262,6 @@ def main():
     model = create_model(opt)  # load pretrained model of SFTMD
 
     print('Model created, param count: %d' % (sum([m.numel() for m in model.netG.parameters()])))
-    # print(model.netG.module.Estimator)
-    # for key, param in model.netG.state_dict().items():
-    #     if 'Estimator' in key:
-    #         print(key)
 
     #### resume training
     if resume_state:
@@ -297,7 +273,6 @@ def main():
 
         start_epoch = resume_state["epoch"]
         current_step = resume_state["iter"]
-        # model.resume_training(resume_state)  # handle optimizers and schedulers
     else:
         current_step = 0
         start_epoch = 0
@@ -308,9 +283,6 @@ def main():
     kernel_size = opt["degradation"]["ksize"]
     padding = kernel_size // 2
 
-    # test before training
-    # model_test(model, val_loader, opt, logger)
-
     #### training
     logger.info(
         "Start training from epoch: {:d}, iter: {:d}".format(start_epoch, current_step)
@@ -320,17 +292,13 @@ def main():
     best_psnr = 0.0
     best_iter = 0
     lr_scale = 1
-    # if rank <= 0:
     prev_state_dict = copy.deepcopy(model.netG.module.state_dict())
     prev_training_state = model.wrap_training_state(start_epoch, current_step)
 
     for i in range(current_step):
-    # for i in range(1000000):
         model.update_learning_rate(
             current_step, warmup_iter=opt["train"]["warmup_iter"]
         )
-
-        # logger.info(f'{i}: {model.get_current_learning_rate()}')
 
     for epoch in range(start_epoch, total_epochs + 1):
         if opt["dist"]:
@@ -341,9 +309,6 @@ def main():
             if current_step > total_iters:
                 break
             LR_img, ker_map, kernels, lr_blured_t, lr_t = prepro(train_data["GT"], True, return_blur=True)
-            # if train_data["LQ_path"] != train_data["GT_path"]:
-            #     LR_img = train_data["LQ"]
-
             LR_img = (LR_img * 255).round() / 255
 
             model.feed_data(
@@ -351,7 +316,6 @@ def main():
             )
             model.optimize_parameters(current_step)
 
-            # model.adjust_lr(1.0 / lr_scale)
             model.update_learning_rate(
                 current_step, warmup_iter=opt["train"]["warmup_iter"]
             )
@@ -375,12 +339,10 @@ def main():
 
             should_reload_model = False
             # validation, to produce ker_map_list(fake)
-            # if current_step % opt["train"]["val_freq"] == 0 and rank < 1:
             if current_step % opt["train"]["val_freq"] == 0:
                 avg_psnr = 0.0
                 idx = 0
                 for _, val_data in enumerate(val_loader):
-                    # LR_img, ker_map = prepro(val_data['GT'])
                     LR_img = val_data["LQ"]
                     lr_img = util.tensor2img(LR_img)  # save LR image for reference
 
@@ -392,7 +354,6 @@ def main():
                     # Save images for reference
                     img_name = val_data["LQ_path"][0]
                     img_dir = os.path.join(opt["path"]["val_images"], img_name)
-                    # img_dir = os.path.join(opt['path']['val_images'], str(current_step), '_', str(step))
                     util.mkdir(img_dir)
                     save_lr_path = os.path.join(img_dir, "{:s}_LR.png".format(img_name))
                     util.save_img(lr_img, save_lr_path)
@@ -415,11 +376,6 @@ def main():
                     cv2.imwrite(save_img_path, kernel)
                     util.save_img(sr_img, save_img_path)
 
-                    # gtsave_img_path = os.path.join(
-                    #     img_dir, "{:s}_GT.png".format(img_name, current_step)
-                    # )
-                    # util.save_img(gt_img, gtsave_img_path)
-
                     # calculate PSNR
                     crop_size = opt["scale"]
                     gt_img = gt_img / 255.0
@@ -430,14 +386,10 @@ def main():
                     cropped_sr_img_y = bgr2ycbcr(cropped_sr_img, only_y=True)
                     cropped_gt_img_y = bgr2ycbcr(cropped_gt_img, only_y=True)
 
-                    # print(val_data["GT"].shape, gt_img.shape, sr_img.shape)
-                    # print(cropped_gt_img_y.shape, cropped_sr_img_y.shape)
-
                     avg_psnr += util.calculate_psnr(
                         cropped_sr_img_y * 255, cropped_gt_img_y * 255
                     )
                     idx += 1
-                    # logger.info("Test image: {:d} on rank {:d}".format(idx, rank))
                     print("Test image: {:d} on rank {:d}".format(idx, rank))
 
                 avg_psnr = avg_psnr / idx
@@ -447,8 +399,6 @@ def main():
                     best_iter = current_step
                     if avg_psnr > 20:
                         # cache best ckpt and state
-                        # prev_state_dict = copy.deepcopy(model.netG.module.state_dict())
-                        # prev_training_state = model.wrap_training_state(epoch, current_step)
                         if rank <= 0 and avg_psnr > 26:
                             logger.info("Saving models and training states.")
                             model.save(current_step)
@@ -456,7 +406,6 @@ def main():
 
                 torch.cuda.synchronize()
                 # log
-                # logger.info("# Validation # PSNR: {:.6f}, Best PSNR: {:.6f}| Iter: {} Rank: {}".format(avg_psnr, best_psnr, best_iter, rank))
                 print("# Validation # PSNR: {:.6f}, Best PSNR: {:.6f}| Iter: {} Rank: {}".format(avg_psnr, best_psnr, best_iter, rank))
                 if rank == 0:
                     logger_val = logging.getLogger("val")  # validation logger
@@ -470,12 +419,7 @@ def main():
                     tb_logger.add_scalar("psnr", avg_psnr, current_step)
 
                 if avg_psnr > 20:
-                # if avg_psnr > 28.9:
-                    # if rank <= 0:
-                    # prev_state_dict = copy.deepcopy(model.netG.module.state_dict())
-                    # prev_training_state = model.wrap_training_state(epoch, current_step)
                     lr_scale = 1.0
-                        # torch.save(prev_state_dict, opt["name"]+".pth")
                 else:
                     torch.cuda.synchronize()
                     logger.info(f"# Validation crashed on rank {rank}, use previous state_dict...\n")
@@ -490,21 +434,11 @@ def main():
 
                     #### create model
                     model = create_model(tmp_opt)  # load pretrained model of SFTMD
-                    # model.resume_training(prev_training_state)
-
-                    # model.netG.module.load_state_dict(copy.deepcopy(prev_state_dict), strict=True)
-                    # model.resume_training(prev_training_state)
-
                     lr_scale = 1
                     logger.info("# Reload the checkpoint from iteration {:d} on rank {:d}\n".format(best_iter, rank))
                     print("# Reload the checkpoint from iteration {:d} on rank {:d}\n".format(best_iter, rank))
-                    # model_test(model, val_loader, opt, logger)
                     torch.cuda.synchronize()
                     torch.cuda.empty_cache()
-
-                    # model.netG.module.load_state_dict(torch.load(opt["name"]+".pth"), strict=True)
-                    # model.load_network(opt["name"]+".pth", model.netG)
-                    # break
 
 
             #### save models and training states

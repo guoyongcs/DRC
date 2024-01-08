@@ -294,7 +294,6 @@ class LayerChannelSelection(object):
         for e in range(epoch):
             for j, batch in enumerate(self.train_loader):
                 # get data
-                # lr, hr = self.get_batch_data(train_dataloader_iter)
                 lr, hr = self.prepare_data(batch)
                 pruned_output = self.model_segment(lr[0], 
                     final_output=True, original_forward=original_forward)

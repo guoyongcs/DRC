@@ -107,14 +107,10 @@ class SearchController(nn.Module):
             if n.find('alpha') < 0:
                 yield p
 
-        # return self.search_model.parameters()
-
     def named_weights(self):
         for n, p in self.search_model.named_parameters():
             if n.find('alpha') < 0:
                 yield n, p
-                
-        # return self.search_model.named_parameters()
 
     def get_alphas(self):
         return self.alphas_all

@@ -93,8 +93,6 @@ class DatasetDPSR(data.Dataset):
                 noise_level = torch.zeros(1).float()
             else:
                 noise_level = torch.FloatTensor([np.random.uniform(self.sigma_min, self.sigma_max)])/255.0
-                # noise_level = torch.rand(1)*50/255.0
-                # noise_level = torch.min(torch.from_numpy(np.float32([7*np.random.chisquare(2.5)/255.0])),torch.Tensor([50./255.]))
     
         else:
 

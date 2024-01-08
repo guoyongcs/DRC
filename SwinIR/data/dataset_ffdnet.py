@@ -68,7 +68,6 @@ class DatasetFFDNet(data.Dataset):
             # ---------------------------------
             # get noise level
             # ---------------------------------
-            # noise_level = torch.FloatTensor([np.random.randint(self.sigma_min, self.sigma_max)])/255.0
             noise_level = torch.FloatTensor([np.random.uniform(self.sigma_min, self.sigma_max)])/255.0
 
             # ---------------------------------

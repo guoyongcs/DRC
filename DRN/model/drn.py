@@ -81,11 +81,6 @@ class DRN(nn.Module):
             )
 
         # tail blocks output sr imgs from intermedia features
-        # self.tail = nn.ModuleList([
-        #     conv(
-        #         n_feats * pow(2, p), opt.n_colors, kernel_size
-        #     ) for p in range(self.phase, 0, -1)
-        # ])
         self.tail = [conv(
             n_feats * pow(2, self.phase), opt.n_colors, kernel_size
         )]

@@ -94,7 +94,7 @@ class SearchModel(nn.Module):
         self.logger.info('Replace layers done ... ')
         self.logger.info(self.search_modules)
 
-    def replace_one_layer(self, module, module_idx): # TODO ,change code for SwinIR
+    def replace_one_layer(self, module, module_idx): 
         """replace the layer in original model to selected channels"""
         if isinstance(module, WindowAttention):
             layer = module.proj

@@ -55,10 +55,6 @@ class SRMD(nn.Module):
 
         self.model = B.sequential(m_head, *m_body, m_tail)
 
-#    def forward(self, x, k_pca):
-#        m = k_pca.repeat(1, 1, x.size()[-2], x.size()[-1])
-#        x = torch.cat((x, m), 1)
-#        x = self.body(x)
 
     def forward(self, x):
 

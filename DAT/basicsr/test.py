@@ -13,7 +13,6 @@ def test_pipeline(root_path):
     opt, _ = parse_options(root_path, is_train=False)
 
     torch.backends.cudnn.benchmark = True
-    # torch.backends.cudnn.deterministic = True
 
     # mkdir and initialize loggers
     make_exp_dirs(opt)

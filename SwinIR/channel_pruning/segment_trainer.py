@@ -5,7 +5,6 @@ import torch.autograd
 import torch.nn as nn
 
 from utils import pruned_utils
-# from model.common import RCAB, ResBlock, DownBlock, Upsampler, MeanShift
 from .segement import SwinIRSegment
 from utils import utils_image as util
 from models.network_swinir_pruned import Mlp, WindowAttention

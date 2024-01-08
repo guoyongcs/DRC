@@ -9,7 +9,6 @@ class Discriminator(nn.Module):
         in_channels = 3
         out_channels = 64
         depth = 7
-        #bn = not gan_type == 'WGAN_GP'
         bn = True
         act = nn.LeakyReLU(negative_slope=0.2, inplace=True)
 
@@ -31,16 +30,6 @@ class Discriminator(nn.Module):
 
         self.patch_size = opt.patch_size // (2**((depth + 1) // 2))
         
-        # if self.opt.dual:
-        #     scale = [1]
-        #     scale += opt.scale
-        #     self.linear = nn.ModuleDict([
-        #         [str(s), nn.Linear(out_channels * math.ceil(self.patch_size/s)**2 , 1024)] for s in scale
-        #     ])
-        # else:
-        #     self.linear = nn.ModuleDict([
-        #         ['1', nn.Linear(out_channels * self.patch_size**2 , 1024)]
-        #     ])
         scale = [1]
         scale += opt.scale
         self.linear = nn.ModuleDict([

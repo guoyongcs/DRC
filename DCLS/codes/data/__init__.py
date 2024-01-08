@@ -53,8 +53,6 @@ def create_dataset(dataset_opt):
 
         dataset = D(dataset_opt)
 
-    # elif mode == 'LQGTseg_bg':
-    #     from data.LQGT_seg_bg_dataset import LQGTSeg_BG_Dataset as D
     else:
         raise NotImplementedError("Dataset [{:s}] is not recognized.".format(mode))
 

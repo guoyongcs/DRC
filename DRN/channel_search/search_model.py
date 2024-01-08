@@ -38,7 +38,7 @@ class SearchModel(nn.Module):
             channel_weights = self.compute_channel_weights(
                 alphas_softmax[idx], channel_sets[idx], layer)
             # set weights for all channels
-            layer.set_channel_weights(channel_weights) # TODO: check whether this operations affect the search process
+            layer.set_channel_weights(channel_weights)
 
     def compute_channel_weights(self, alphas_softmax, channel_options, layer):
         if not self.args.unordered_channels:

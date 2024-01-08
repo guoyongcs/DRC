@@ -104,17 +104,12 @@ class MaskedGradient(nn.Module):
         inputs_x_new, inputs_y_new = self._padding_gradient(inputs_x_new, inputs_y_new)
         targets_x_new, targets_y_new = self._padding_gradient(targets_x_new.detach(), targets_y_new.detach())
         
-        # inputs_new_xy_grad = self._combine_gradient_xy(inputs_x_new, inputs_y_new)
-        # target_new_xy_grad = self._combine_gradient_xy(targets_x_new, targets_y_new)
 
         # calculate the loss of gradient dividually
         grad_loss_x = self.criterion(inputs_x_new + self.opt.ROBUST, targets_x_new.detach() + self.opt.ROBUST)
         grad_loss_y = self.criterion(inputs_y_new + self.opt.ROBUST, targets_y_new.detach() + self.opt.ROBUST)
         grad_loss = grad_loss_x + grad_loss_y
         
-        # combine the grad_x and grad_y to caculate the gradient loss
-        # grad_loss = self.criterion(inputs_new_xy_grad + self.opt.ROBUST, target_new_xy_grad.detach() + self.opt.ROBUST)
-
         # calculate the loss of (1-P) x I (content loss)
         mse_loss = self.criterion(mse_inputs + self.opt.ROBUST, mse_target.detach() + self.opt.ROBUST)
         # calculate the total loss

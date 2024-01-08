@@ -31,7 +31,6 @@ class MultiStepLR_Restart(_LRScheduler):
             if self.clear_state:
                 self.optimizer.state = defaultdict(dict)
             weight = self.restart_weights[self.restarts.index(self.last_epoch)]
-            # print(self.optimizer.param_groups)
             return [
                 group["initial_lr"] * weight for group in self.optimizer.param_groups
             ]

@@ -161,7 +161,6 @@ class ChannelPruning():
         self.segment_wise_trainer.val()
         
         block_count = len(pruned_modules)
-        # self.checkpoint.save_models(self.pruned_model, block_count)
         
         self.pruning()
 

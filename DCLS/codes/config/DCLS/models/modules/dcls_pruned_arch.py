@@ -187,10 +187,6 @@ class Estimator(nn.Module):
 
         K = self.calc_curr_k(kernels, batch).mean(dim=1, keepdim=True)
 
-        # for anisox2
-        # K = F.softmax(K.flatten(start_dim=1), dim=1)
-        # K = K.view(batch, 1, self.ksize, self.ksize)
-
         K = K / torch.sum(K, dim=(2, 3), keepdim=True)
 
         return K
@@ -262,10 +258,8 @@ class Restorer(nn.Module):
                 nn.Conv2d(nf, out_nc, 3, 1, 1),
             )
 
-        # self.relu = nn.LeakyReLU(0.1, inplace=True)
 
     def forward(self, input, kernel):
-        # B, C, H, W = input.size()  # I_LR batch
 
         f = self.conv_first(input)
         feature = self.feature_block(f)

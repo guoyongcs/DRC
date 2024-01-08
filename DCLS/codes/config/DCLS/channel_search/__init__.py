@@ -22,7 +22,6 @@ class Search():
         opt = args.opt['search']
         # initalize logger
         self.logger = get_logger(args.save_dir, "search", log_file='search.log')
-        # self.tensorboard_logger = TensorboardLogger(osp.join(args.save_dir, 'search_tb'))
         self.tensorboard_logger = None
         self.logger.info("|===>Result will be saved at {}".format(args.save_dir))
         
@@ -151,7 +150,6 @@ class Search():
             timer_model.tic()
             # phase 2. architect step (alpha)
             self.alpha_optimizer.zero_grad()
-            # fix bugs, change alpha lr to w_lr (Done!)
             val_loss = self.architect.unrolled_backward(
                 trn_lr, trn_hr, trn_lr_blured_t, trn_lr_t,
                 val_lr, val_hr, val_lr_blured_t, val_lr_t,
@@ -179,10 +177,6 @@ class Search():
 
             if (step + 1) % self.args.opt['search']['print_every'] == 0:
                 # print log
-                # self.tensorboard_logger.scalar_summary(
-                #     tag="Train_loss", value=trn_loss, step=self.logger_counter)
-                # self.tensorboard_logger.scalar_summary(
-                #     tag="Valid_loss", value=val_loss, step=self.logger_counter)
                 self.logger_counter += 1
                 
                 batch_size = self.args.opt['datasets']['train']['batch_size']

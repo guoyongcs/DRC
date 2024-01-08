@@ -63,10 +63,6 @@ class ModulatedDeformConv(nn.Module):
         if self.bias is not None:
             self.bias.data.zero_()
 
-    # def forward(self, x, offset, mask):
-    #     return modulated_deform_conv(x, offset, mask, self.weight, self.bias, self.stride, self.padding, self.dilation,
-    #                                  self.groups, self.deformable_groups)
-
 
 class ModulatedDeformConvPack(ModulatedDeformConv):
     """A ModulatedDeformable Conv Encapsulation that acts as normal Conv layers.
@@ -104,15 +100,6 @@ class ModulatedDeformConvPack(ModulatedDeformConv):
         if hasattr(self, 'conv_offset'):
             self.conv_offset.weight.data.zero_()
             self.conv_offset.bias.data.zero_()
-
-    # def forward(self, x):
-    #     out = self.conv_offset(x)
-    #     o1, o2, mask = torch.chunk(out, 3, dim=1)
-    #     offset = torch.cat((o1, o2), dim=1)
-    #     mask = torch.sigmoid(mask)
-    #     return modulated_deform_conv(x, offset, mask, self.weight, self.bias, self.stride, self.padding, self.dilation,
-    #                                  self.groups, self.deformable_groups)
-
 
 def _no_grad_trunc_normal_(tensor, mean, std, a, b):
     # From: https://github.com/rwightman/pytorch-image-models/blob/master/timm/models/layers/weight_init.py
@@ -224,18 +211,13 @@ def flow_warp(x, flow, interp_mode='bilinear', padding_mode='zeros', align_corne
     Returns:
         Tensor: Warped image or feature map.
     """
-    # assert x.size()[-2:] == flow.size()[1:3] # temporaily turned off for image-wise shift
     n, _, h, w = x.size()
     # create mesh grid
-    # grid_y, grid_x = torch.meshgrid(torch.arange(0, h).type_as(x), torch.arange(0, w).type_as(x)) # an illegal memory access on TITAN RTX + PyTorch1.9.1
     grid_y, grid_x = torch.meshgrid(torch.arange(0, h, dtype=x.dtype, device=x.device), torch.arange(0, w, dtype=x.dtype, device=x.device))
     grid = torch.stack((grid_x, grid_y), 2).float()  # W(x), H(y), 2
     grid.requires_grad = False
 
     vgrid = grid + flow
-
-    # if use_pad_mask: # for PWCNet
-    #     x = F.pad(x, (0,0,0,0,0,1), mode='constant', value=1)
 
     # scale grid to [-1,1]
     if interp_mode == 'nearest4': # todo: bug, no gradient for flow model in this case!!! but the result is good
@@ -257,10 +239,6 @@ def flow_warp(x, flow, interp_mode='bilinear', padding_mode='zeros', align_corne
         vgrid_scaled = torch.stack((vgrid_x, vgrid_y), dim=3)
         output = F.grid_sample(x, vgrid_scaled, mode=interp_mode, padding_mode=padding_mode, align_corners=align_corners)
 
-        # if use_pad_mask: # for PWCNet
-        #     output = _flow_warp_masking(output)
-
-        # TODO, what if align_corners=False
         return output
 
 

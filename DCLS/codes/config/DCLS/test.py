@@ -45,7 +45,6 @@ os.symlink(os.path.join(opt["path"]["results_root"], ".."), "./result")
 util.set_random_seed(0)
 
 torch.backends.cudnn.benchmark = True
-# torch.backends.cudnn.deterministic = True
 
 util.setup_logger(
     "base",

@@ -35,21 +35,6 @@ class SearchController(nn.Module):
             self.channel_sets.append(
                 self.init_channel_options(
                     self.search_model.get_search_channel_num(i)))
-        
-        ##### save the channel configs of the model without pruning ###
-        # ori_num_channels = []
-        # for i in range(self.n_layers):
-        #     ori_num_channels.append(
-        #             self.search_model.get_search_channel_num(i))
-        
-        # ori_num_channels = np.array(ori_num_channels)
-        # save_path = os.path.join(self.args.save_dir, 'ori_num_channels.txt')
-        # # if not os.path.exists(self.args.save_dir):
-        # #     os.makedirs(self.args.save_dir)
-        # np.savetxt(save_path, ori_num_channels, fmt='%d')
-
-        # for i in range(self.n_layers):
-        #     print(ori_num_channels[i])
 
         self._alphas = []
         for n, p in self.named_parameters():

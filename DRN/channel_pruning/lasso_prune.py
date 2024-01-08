@@ -1,7 +1,6 @@
 """
 channel pruning method based on LASSO
 """
-# import logging
 import math
 
 import numpy as np

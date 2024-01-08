@@ -8,8 +8,6 @@ import numpy as np
 import datetime
 from .model_analyse import *
 from .model_transform import *
-# from .tensorboard_logger import *
-
 
 class AverageMeter(object):
     """Computes and stores the average and current value"""

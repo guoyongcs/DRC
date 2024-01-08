@@ -43,10 +43,6 @@ class PrefetchDataLoader(DataLoader):
     Ref:
     https://github.com/IgorSusmelj/pytorch-styleguide/issues/5#
 
-    TODO:
-    Need to test on single gpu and ddp (multi-gpu). There is a known issue in
-    ddp.
-
     Args:
         num_prefetch_queue (int): Number of prefetch queue.
         kwargs (dict): Other arguments for dataloader.

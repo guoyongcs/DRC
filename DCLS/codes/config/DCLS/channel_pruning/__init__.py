@@ -16,7 +16,6 @@ from models.modules.dcls_arch import DPCAB, Estimator
 from models.modules.module_util import ResidualBlock_noBN
 import sys
 sys.path.append('../..')
-# from utils.pruned_utils import get_logger, TensorboardLogger, model2list, ModelAnalyse
 from utils.pruned_utils import get_logger, model2list, ModelAnalyse
 
 
@@ -41,7 +40,6 @@ class ChannelPruning():
         self.current_block_count = 0
 
         self.logger = get_logger(self.args.save_dir, "pruning")
-        # self.tensorboard_logger = TensorboardLogger(osp.join(self.args.save_dir, 'tb'))
         self.tensorboard_logger = None
         self.logger.info("|===>Result will be saved at {}".format(self.args.save_dir))
         self.prepare()
@@ -96,7 +94,6 @@ class ChannelPruning():
         """
         Load resume checkpoint
         """
-        # TODO: do not testing for 
         if self.args.opt['pruning']['resume_pruning'] is not None:
             check_point_params = torch.load(self.args.opt['pruning']['resume_pruning'])
             pruned_model_state = check_point_params["pruned_model"]
@@ -111,7 +108,6 @@ class ChannelPruning():
         """
         Replace the convolutional layer with mask convolutional layer
         """
-        # TODO change for the new pruning structure
         block_count = 0
         pruned_modules = self.segment_wise_trainer.pruned_modules
         for idx, module in enumerate(pruned_modules):
@@ -162,7 +158,6 @@ class ChannelPruning():
         original_modules = model2list(self.segment_wise_trainer.original_modules)
         pruned_modules = model2list(self.segment_wise_trainer.pruned_modules)
 
-        # original_seq = nn.Sequential(*original_modules)
         pruned_seq = nn.Sequential(*pruned_modules)
         
         self.logger.info(pruned_seq)
@@ -177,7 +172,6 @@ class ChannelPruning():
         self.segment_wise_trainer.val()
         
         block_count = len(pruned_modules)
-        # self.checkpoint.save_models(self.pruned_model, block_count)
         
         self.pruning()
 
@@ -197,7 +191,6 @@ class ChannelPruning():
         for ori_module, pruned_module in zip(original_modules, pruned_modules):
             if isinstance(pruned_module, DPCAB):
                 block_count += 1
-                # We will not prune the pruned blocks again
                 if not isinstance(pruned_module.body1[2], MaskConv2d):
                     self.layer_channel_selection.\
                         channel_selection_for_one_layer(
@@ -205,7 +198,6 @@ class ChannelPruning():
                     self.logger.info("|===>checking layer type: {}".format(type(pruned_module.body1[2])))
             elif isinstance(pruned_module, ResidualBlock_noBN):
                 block_count += 1
-                # We will not prune the pruned blocks again
                 if not isinstance(pruned_module.conv2, MaskConv2d):
                     self.layer_channel_selection.\
                         channel_selection_for_one_layer(

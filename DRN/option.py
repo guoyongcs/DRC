@@ -292,9 +292,6 @@ parser.add_argument('--bicubic', action='store_true',
 
 args = parser.parse_args()
 
-# add time stamp to save path
-# if not args.test_only:
-#     args.save = '{}_{}'.format(args.save, time.strftime("%Y%m%d_%H%M%S"))
 if args.pruned_dual_model == '.':
     args.pruned_dual_model == args.pre_train_dual
 

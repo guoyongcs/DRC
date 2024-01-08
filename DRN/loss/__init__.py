@@ -7,7 +7,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from importlib import import_module
-# from loss.charbonnier import L1_Charbonnier_loss
 
 class Loss(nn.modules.loss._Loss):
     def __init__(self, args, ckp):
@@ -25,15 +24,12 @@ class Loss(nn.modules.loss._Loss):
             elif loss_type == 'L1':
                 loss_function = nn.L1Loss(reduction=args.l1_reduction)
             elif loss_type == "L1_Charbonnier":
-                # loss_function = L1_Charbonnier_loss()
                 module = import_module('loss.charbonnier')
                 loss_function = getattr(module, 'L1_Charbonnier_loss')()
             elif loss_type == "MGG":
-                # loss_function = L1_Charbonnier_loss()
                 module = import_module('loss.mask_gradient_grey')
                 loss_function = getattr(module, 'MaskedGradientGrey')(args)
             elif loss_type == "MW":
-                # loss_function = L1_Charbonnier_loss()
                 module = import_module('loss.maskweight')
                 loss_function = getattr(module, 'MaskWeightLoss')(args)
             elif loss_type == 'VGG22' or loss_type == 'VGG54':

@@ -29,7 +29,6 @@ def main():
     else:
         print("Folder [{:s}] already exists. Exit...".format(save_folder))
         sys.exit(1)
-    # print('Parent process {:d}.'.format(os.getpid()))
 
     img_list = []
     for root, _, file_list in sorted(os.walk(input_folder)):
